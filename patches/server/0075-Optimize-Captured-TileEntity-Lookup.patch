@@ -10,7 +10,7 @@ Optimize to check if the captured list even has values in it, and also to
 just do a get call since the value can never be null.
 
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index b75d78da71f24a0b02bf709d026389add0556489..4a74ed1f8ea6c0a20743e415f7f04bdb7bd1ec01 100644
+index b75d78da71f24a0b02bf709d026389add0556489..cb57778e813a039c38ffc5c6fac19cd29af1b15a 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -2009,12 +2009,15 @@ public abstract class World implements IBlockAccess {
@@ -21,7 +21,7 @@ index b75d78da71f24a0b02bf709d026389add0556489..4a74ed1f8ea6c0a20743e415f7f04bdb
 -                return capturedTileEntities.get(blockposition);
 +            // PandaSpigot start - Optimize Captured TileEntity Lookup
 +            TileEntity tileentity = null;
-+            if (!capturedTileEntities.isEmpty() && (tileentity = capturedTileEntities.get(blockposition)) != null)
++            if (!capturedTileEntities.isEmpty() && (tileentity = capturedTileEntities.get(blockposition)) != null) {
 +                return tileentity;
              }
 +            // PandaSpigot end
