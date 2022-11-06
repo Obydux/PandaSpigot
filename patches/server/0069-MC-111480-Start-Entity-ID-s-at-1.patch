@@ -1,0 +1,21 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Sun, 6 Nov 2022 12:46:35 -0300
+Subject: [PATCH] MC-111480: Start Entity ID's at 1
+
+DataWatchers that store Entity ID's treat 0 as special,
+and can break things such as Elytra Fireworks.
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 58e485c2e5845dda15c33ee1beb170860535f88b..9052c1da1b38e52fd78557349cb1996dcb865aa2 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -61,7 +61,7 @@ public abstract class Entity implements ICommandListener {
+     // PandaSpigot end
+ 
+     private static final AxisAlignedBB a = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
+-    private static int entityCount;
++    private static int entityCount = 1; // PandaSpigot - MC-111480 - ID 0 is treated as special for DataWatchers, start 1
+     private int id;
+     public double j;
+     public boolean k;
