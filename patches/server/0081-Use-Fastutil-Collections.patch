@@ -159,7 +159,7 @@ index ab107574c8027debefb437f1605789b1d48d5593..53e6dc1b99fd71c82ff965bc4b67b9cc
                      iter.remove();
                      continue;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index f663a6468b40e8ddd1fee3ad46381d8eede45e64..bbbea36465d4a8a0bd9b2c621cfb9c29d4286f47 100644
+index f663a6468b40e8ddd1fee3ad46381d8eede45e64..d5734b366166af9af5e0194487bedf5f4fb62e55 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -219,7 +219,7 @@ public class CraftWorld implements World {
@@ -194,7 +194,7 @@ index f663a6468b40e8ddd1fee3ad46381d8eede45e64..bbbea36465d4a8a0bd9b2c621cfb9c29
  
              // Already unloading?
 -            if (cps.unloadQueue.contains(chunk.locX, chunk.locZ)) {
-+            if (cps.unloadQueue.contains(LongHash.toLong(x, z))) { // PandaSpigot - invoke LongHash directly
++            if (cps.unloadQueue.contains(LongHash.toLong(chunk.locX, chunk.locZ))) { // PandaSpigot - invoke LongHash directly
                  continue;
              }
  
