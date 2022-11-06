@@ -16,21 +16,24 @@ index ae3cdaca275b1a50c5c37c3dd0021c4bd579d373..800b9970bd15ee6d1357ab2e27e96360
 +    public boolean disableDisconnectSpam = false;
  }
 diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
-index e2499f5f9c4b289e41c0f8fb922ed085047c7099..493193f01666ffc7d3e49c6fdd2d2d194d54339d 100644
+index e2499f5f9c4b289e41c0f8fb922ed085047c7099..afd730b429fac34467176ef038d58d6e03487a0d 100644
 --- a/src/main/java/net/minecraft/server/PlayerConnection.java
 +++ b/src/main/java/net/minecraft/server/PlayerConnection.java
-@@ -1969,9 +1969,11 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+@@ -1969,10 +1969,14 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
      public void a(PacketPlayInTabComplete packetplayintabcomplete) {
          PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.u());
          // CraftBukkit start
 -        if (chatSpamField.addAndGet(this, 10) > 500 && !this.minecraftServer.getPlayerList().isOp(this.player.getProfile())) {
 -            this.disconnect("disconnect.spam");
 -            return;
++        // PandaSpigot start - Add disableDisconnectSpam config
 +        if (!com.hpfxd.pandaspigot.config.PandaSpigotConfig.get().disableDisconnectSpam) {
 +            if (chatSpamField.addAndGet(this, 10) > 500 && !this.minecraftServer.getPlayerList().isOp(this.player.getProfile())) {
 +                this.disconnect("disconnect.spam");
 +                return;
 +            }
          }
++        // PandaSpigot end
          // CraftBukkit end
          ArrayList arraylist = Lists.newArrayList();
+         Iterator iterator = this.minecraftServer.tabCompleteCommand(this.player, packetplayintabcomplete.a(), packetplayintabcomplete.b()).iterator();
