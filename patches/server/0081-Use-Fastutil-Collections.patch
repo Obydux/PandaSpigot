@@ -27,7 +27,7 @@ index b208da3ee4c54475630c64de43fb934855dc49c3..351817e215e969d3f49dd5eedcc8a282
      implementation("com.mojang:authlib:1.5.21")
      implementation("org.apache.logging.log4j:log4j-api:2.17.1")
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 9d31e75170c96103cd74557323af84dfbd9964ab..c1bc28e44a64c6244e6b701f4158e6da03ea2c3b 100644
+index 9d31e75170c96103cd74557323af84dfbd9964ab..d45fba17d1a295e7a4d01b19ce1d528a31f5bbeb 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -29,12 +29,12 @@ import org.github.paperspigot.exception.ServerInternalException;
@@ -35,7 +35,7 @@ index 9d31e75170c96103cd74557323af84dfbd9964ab..c1bc28e44a64c6244e6b701f4158e6da
  
      private static final Logger b = LogManager.getLogger();
 -    public LongHashSet unloadQueue = new LongHashSet(); // CraftBukkit - LongHashSet
-+    public it.unimi.dsi.fastutil.longs.LongSet unloadQueue = new it.unimi.dsi.fastutil.longs.LongSet(); // CraftBukkit - LongHashSet // PandaSpigot - LongHashSet -> HashArraySet
++    public it.unimi.dsi.fastutil.longs.LongSet unloadQueue = new it.unimi.dsi.fastutil.longs.LongArraySet(); // CraftBukkit - LongHashSet // PandaSpigot - LongHashSet -> HashArraySet
      public Chunk emptyChunk;
      public IChunkProvider chunkProvider;
      private IChunkLoader chunkLoader;
@@ -88,7 +88,7 @@ index 9d31e75170c96103cd74557323af84dfbd9964ab..c1bc28e44a64c6244e6b701f4158e6da
 -            for (int i = 0; i < 100 && !this.unloadQueue.isEmpty(); ++i) {
 -                long chunkcoordinates = this.unloadQueue.popFirst();
 +            // PandaSpigot start - use iterator for unloadQueue
-+            it.unimi.dsi.fastutil.longs.LongIterator iterator = unloadQueue.interator();
++            it.unimi.dsi.fastutil.longs.LongIterator iterator = unloadQueue.iterator();
 +            for (int i = 0; i < 100 && iterator.hasNext(); ++i) {
 +                long chunkcoordinates = iterator.next();
 +                iterator.remove();
@@ -159,7 +159,7 @@ index ab107574c8027debefb437f1605789b1d48d5593..53e6dc1b99fd71c82ff965bc4b67b9cc
                      iter.remove();
                      continue;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index f663a6468b40e8ddd1fee3ad46381d8eede45e64..4dae4c6f753b745ea04c6934a73ef2172106560f 100644
+index f663a6468b40e8ddd1fee3ad46381d8eede45e64..89d0e380287b8ab624f8d68878d3287be0300c22 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -219,7 +219,7 @@ public class CraftWorld implements World {
@@ -167,7 +167,7 @@ index f663a6468b40e8ddd1fee3ad46381d8eede45e64..4dae4c6f753b745ea04c6934a73ef217
          }
  
 -        world.chunkProviderServer.unloadQueue.remove(x, z);
-+        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(chunkX, chunkZ)); // PandaSpigot - invoke LongHash directly
++        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); // PandaSpigot - invoke LongHash directly
          world.chunkProviderServer.chunks.remove(LongHash.toLong(x, z));
  
          return true;
@@ -180,6 +180,15 @@ index f663a6468b40e8ddd1fee3ad46381d8eede45e64..4dae4c6f753b745ea04c6934a73ef217
  
          net.minecraft.server.Chunk chunk = null;
  
+@@ -277,7 +277,7 @@ public class CraftWorld implements World {
+             return world.chunkProviderServer.getChunkAt(x, z) != null;
+         }
+ 
+-        world.chunkProviderServer.unloadQueue.remove(x, z);
++        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); //  PandaSpigot - invoke LongHash directly
+         net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
+ 
+         if (chunk == null) {
 @@ -1428,7 +1428,7 @@ public class CraftWorld implements World {
              }
  
