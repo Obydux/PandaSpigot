@@ -159,7 +159,7 @@ index ab107574c8027debefb437f1605789b1d48d5593..53e6dc1b99fd71c82ff965bc4b67b9cc
                      iter.remove();
                      continue;
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
-index f663a6468b40e8ddd1fee3ad46381d8eede45e64..89d0e380287b8ab624f8d68878d3287be0300c22 100644
+index f663a6468b40e8ddd1fee3ad46381d8eede45e64..bbbea36465d4a8a0bd9b2c621cfb9c29d4286f47 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftWorld.java
 @@ -219,7 +219,7 @@ public class CraftWorld implements World {
@@ -185,7 +185,7 @@ index f663a6468b40e8ddd1fee3ad46381d8eede45e64..89d0e380287b8ab624f8d68878d3287b
          }
  
 -        world.chunkProviderServer.unloadQueue.remove(x, z);
-+        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); //  PandaSpigot - invoke LongHash directly
++        world.chunkProviderServer.unloadQueue.remove(LongHash.toLong(x, z)); // PandaSpigot - invoke LongHash directly
          net.minecraft.server.Chunk chunk = world.chunkProviderServer.chunks.get(LongHash.toLong(x, z));
  
          if (chunk == null) {
