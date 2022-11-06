@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: crafter23456 <idk@gmail.com>
+Date: Sun, 6 Nov 2022 12:36:26 -0300
+Subject: [PATCH] Add disableDisconnectSpam config
+
+
+diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
+index ae3cdaca275b1a50c5c37c3dd0021c4bd579d373..800b9970bd15ee6d1357ab2e27e963607449b915 100644
+--- a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
++++ b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotConfig.java
+@@ -125,4 +125,6 @@ public class PandaSpigotConfig {
+     @Comment("Whether player IP addresses should be logged by the server. This does not impact\n" +
+         "the ability of plugins to log the IP addresses of players.")
+     public boolean logPlayerIpAddresses = true;
++
++    public boolean disableDisconnectSpam = false;
+ }
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index e2499f5f9c4b289e41c0f8fb922ed085047c7099..493193f01666ffc7d3e49c6fdd2d2d194d54339d 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -1969,9 +1969,11 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+     public void a(PacketPlayInTabComplete packetplayintabcomplete) {
+         PlayerConnectionUtils.ensureMainThread(packetplayintabcomplete, this, this.player.u());
+         // CraftBukkit start
+-        if (chatSpamField.addAndGet(this, 10) > 500 && !this.minecraftServer.getPlayerList().isOp(this.player.getProfile())) {
+-            this.disconnect("disconnect.spam");
+-            return;
++        if (!com.hpfxd.pandaspigot.config.PandaSpigotConfig.get().disableDisconnectSpam) {
++            if (chatSpamField.addAndGet(this, 10) > 500 && !this.minecraftServer.getPlayerList().isOp(this.player.getProfile())) {
++                this.disconnect("disconnect.spam");
++                return;
++            }
+         }
+         // CraftBukkit end
+         ArrayList arraylist = Lists.newArrayList();
