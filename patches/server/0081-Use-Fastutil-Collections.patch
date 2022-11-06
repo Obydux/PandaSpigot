@@ -27,7 +27,7 @@ index b208da3ee4c54475630c64de43fb934855dc49c3..351817e215e969d3f49dd5eedcc8a282
      implementation("com.mojang:authlib:1.5.21")
      implementation("org.apache.logging.log4j:log4j-api:2.17.1")
 diff --git a/src/main/java/net/minecraft/server/ChunkProviderServer.java b/src/main/java/net/minecraft/server/ChunkProviderServer.java
-index 9d31e75170c96103cd74557323af84dfbd9964ab..d45fba17d1a295e7a4d01b19ce1d528a31f5bbeb 100644
+index 9d31e75170c96103cd74557323af84dfbd9964ab..ea08370b4079bf6508c53e61de0bf74e40559539 100644
 --- a/src/main/java/net/minecraft/server/ChunkProviderServer.java
 +++ b/src/main/java/net/minecraft/server/ChunkProviderServer.java
 @@ -29,12 +29,12 @@ import org.github.paperspigot.exception.ServerInternalException;
@@ -41,7 +41,7 @@ index 9d31e75170c96103cd74557323af84dfbd9964ab..d45fba17d1a295e7a4d01b19ce1d528a
      private IChunkLoader chunkLoader;
      public boolean forceChunkLoad = false; // CraftBukkit - true -> false
 -    public LongObjectHashMap<Chunk> chunks = new LongObjectHashMap<Chunk>();
-+    public it.unimi.dsi.fastutil.longs.Long2ObjectMap<Chunk> chunks = new LongObjectHashMap<Chunk>(4096, 0.5f); // PandaSpigot - use trove Long2ObjectOpenHashMap instead of craftbukkit implementation (using inital capacity and load factor chosen by Amaranth in an old impl)
++    public it.unimi.dsi.fastutil.longs.Long2ObjectMap<Chunk> chunks = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<Chunk>(4096, 0.5f); // PandaSpigot - use trove Long2ObjectOpenHashMap instead of craftbukkit implementation (using inital capacity and load factor chosen by Amaranth in an old impl)
      public WorldServer world;
  
      public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider) {

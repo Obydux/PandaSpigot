@@ -5,7 +5,7 @@ Subject: [PATCH] Only fire InventoryCloseEvent if inventory is open
 
 
 diff --git a/src/main/java/net/minecraft/server/PacketPlayInCloseWindow.java b/src/main/java/net/minecraft/server/PacketPlayInCloseWindow.java
-index 4dfb6c0215827b815551deda0253d421ab73051c..3dff6d043d5478c36345bd31412a44a76fb39e7f 100644
+index 4dfb6c0215827b815551deda0253d421ab73051c..2aee52fa23cd0c996b7bf34040e7fb16ab2727bb 100644
 --- a/src/main/java/net/minecraft/server/PacketPlayInCloseWindow.java
 +++ b/src/main/java/net/minecraft/server/PacketPlayInCloseWindow.java
 @@ -4,7 +4,7 @@ import java.io.IOException;
@@ -13,7 +13,7 @@ index 4dfb6c0215827b815551deda0253d421ab73051c..3dff6d043d5478c36345bd31412a44a7
  public class PacketPlayInCloseWindow implements Packet<PacketListenerPlayIn> {
  
 -    private int id;
-+    private int id; getId() { return this.id; } // PandaSpigot - OBFHELPER
++    private int id; public int getId() { return this.id; } // PandaSpigot - OBFHELPER
  
      public PacketPlayInCloseWindow() {}
  
