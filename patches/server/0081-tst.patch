@@ -1,0 +1,44 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: uRyanxD <familiarodrigues123ro@gmail.com>
+Date: Sat, 12 Nov 2022 12:28:36 -0300
+Subject: [PATCH] tst
+
+
+diff --git a/src/main/java/net/minecraft/server/PlayerConnection.java b/src/main/java/net/minecraft/server/PlayerConnection.java
+index 217e6a24abdbab8ba4e863e720a95e81b1bda690..53fa9c571e369402b909b3a4cbd61b7451b0ac78 100644
+--- a/src/main/java/net/minecraft/server/PlayerConnection.java
++++ b/src/main/java/net/minecraft/server/PlayerConnection.java
+@@ -2081,6 +2081,10 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+             packetdataserializer = new PacketDataSerializer(Unpooled.wrappedBuffer(packetplayincustompayload.b()));
+ 
+             try {
++                itemstack1 = this.player.inventory.getItemInHand();
++                if (itemstack1 == null || itemstack1.getItem() != Items.WRITABLE_BOOK) {
++                    return;
++                }
+                 itemstack = packetdataserializer.i();
+                 if (itemstack == null) {
+                     return;
+@@ -2090,9 +2094,13 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+                     throw new IOException("Invalid book tag!");
+                 }
+ 
++                /*
+                 itemstack1 = this.player.inventory.getItemInHand();
+                 if (itemstack1 != null) {
++                
+                     if (itemstack.getItem() == Items.WRITTEN_BOOK && itemstack1.getItem() == Items.WRITABLE_BOOK) {
++                */
++                if (itemstack.getItem() == Items.WRITTEN_BOOK) {
+                         if (!validateBook(itemstack)) return; // PandaSpigot
+                         // CraftBukkit start
+                         itemstack1 = new ItemStack(Items.WRITTEN_BOOK);
+@@ -2105,7 +2113,7 @@ public class PlayerConnection implements PacketListenerPlayIn, IUpdatePlayerList
+                     }
+ 
+                     return;
+-                }
++                /*}*/
+             } catch (Exception exception1) {
+                 PlayerConnection.c.error("Couldn\'t sign book", exception1);
+                 this.disconnect("Invalid book data!"); // CraftBukkit
