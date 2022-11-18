@@ -5,6 +5,7 @@ Subject: [PATCH] Fix compatibility with new Java versions.
 
 Changes:
 - Removed W3C CSS import from LoadingMap (????)
+- Removed Reflection#getCallerClass from CustomTimingsHandler. This could be replaced with a StalkWalker with a multi-release jar, but since the class is deprecated anyways, I think it's fine to just leave it.
 
 diff --git a/src/main/java/co/aikar/util/LoadingMap.java b/src/main/java/co/aikar/util/LoadingMap.java
 index a9f2919997db476d1aefe66fcc6fcac8e9f98be2..26d345f533d209951c5fad4ab7cd01063d5e1000 100644
@@ -19,7 +20,7 @@ index a9f2919997db476d1aefe66fcc6fcac8e9f98be2..26d345f533d209951c5fad4ab7cd0106
  import java.lang.reflect.Constructor;
  import java.util.AbstractMap;
 diff --git a/src/main/java/org/spigotmc/CustomTimingsHandler.java b/src/main/java/org/spigotmc/CustomTimingsHandler.java
-index 7e89b97b60d547c75bde6d54f1512b0277099034..40aa8a198398cf994f2c3f8a52988cb4c365adce 100644
+index 7e89b97b60d547c75bde6d54f1512b0277099034..709b62e07e2a704363a96c699ce61e4bba4700d3 100644
 --- a/src/main/java/org/spigotmc/CustomTimingsHandler.java
 +++ b/src/main/java/org/spigotmc/CustomTimingsHandler.java
 @@ -30,7 +30,6 @@ import co.aikar.timings.NullTimingHandler;
@@ -30,58 +31,12 @@ index 7e89b97b60d547c75bde6d54f1512b0277099034..40aa8a198398cf994f2c3f8a52988cb4
  
  import java.lang.reflect.Method;
  import java.util.logging.Level;
-@@ -46,13 +45,41 @@ import java.util.logging.Level;
- @Deprecated
- public final class CustomTimingsHandler {
-     private final Timing handler;
-+    private static Boolean sunReflectAvailable;
-+    private static Method getCallerClass;
- 
-     public CustomTimingsHandler(String name) {
-+        if (sunReflectAvailable == null) {
-+            String javaVer = System.getProperty("java.version");
-+            String[] elements = javaVer.split("\\.");
-+
-+            int major = Integer.parseInt(elements.length >= 2 ? elements[1] : javaVer);
-+            if (major <= 8) {
-+                sunReflectAvailable = true;
-+
-+                try {
-+                    Class<?> reflection = Class.forName("sun.reflect.Reflection");
-+                    getCallerClass = reflection.getMethod("getCallerClass", int.class);
-+                } catch (ClassNotFoundException | NoSuchMethodException ignored) {
-+                }
-+            } else {
-+                sunReflectAvailable = false;
-+            }
-+        }
-+
-+        Class calling = null;
-+        if (sunReflectAvailable) {
-+            try {
-+                calling = (Class) getCallerClass.invoke(null, 2);
-+            } catch (IllegalAccessException | java.lang.reflect.InvocationTargetException ignored) {
-+            }
-+        }
-+
-         Timing timing;
+@@ -52,7 +51,7 @@ public final class CustomTimingsHandler {
  
          Plugin plugin = null;
          try {
 -             plugin = TimingsManager.getPluginByClassloader(Reflection.getCallerClass(2));
-+             plugin = TimingsManager.getPluginByClassloader(calling);
++             //plugin = TimingsManager.getPluginByClassloader(Reflection.getCallerClass(2));
          } catch (Exception ignored) {}
  
          new AuthorNagException("Deprecated use of CustomTimingsHandler. Please Switch to Timings.of ASAP").printStackTrace();
-@@ -60,8 +87,9 @@ public final class CustomTimingsHandler {
-             timing = Timings.of(plugin, "(Deprecated API) " + name);
-         } else {
-             try {
--                final Method ofSafe = TimingsManager.class.getMethod("getHandler", String.class, String.class, Timing.class, boolean.class);
--                timing = (Timing) ofSafe.invoke("Minecraft", "(Deprecated API) " + name, null, true);
-+                final Method ofSafe = TimingsManager.class.getMethod("getHandler", String.class, String.class, Timing.class);
-+                ofSafe.setAccessible(true);
-+                timing = (Timing) ofSafe.invoke(null, "Minecraft", "(Deprecated API) " + name, null);
-             } catch (Exception e) {
-                 Bukkit.getLogger().log(Level.SEVERE, "This handler could not be registered");
-                 timing = Timings.NULL_HANDLER;
