@@ -8,7 +8,7 @@ which can keep them in the chunk when they shouldnt be if done
 during entity ticking.
 
 diff --git a/src/main/java/net/minecraft/server/World.java b/src/main/java/net/minecraft/server/World.java
-index 6f780aee2b1b9dd5f4c080c9eaad30f47e7efaf5..66e4a8a85e872944cd3a00af3b1ad0d112ff3937 100644
+index fd64a31cc2434417a283efd0f3ed14f629818b3a..7f10aecfe4bebc0da311a56f05a37ff029f8595d 100644
 --- a/src/main/java/net/minecraft/server/World.java
 +++ b/src/main/java/net/minecraft/server/World.java
 @@ -1165,7 +1165,7 @@ public abstract class World implements IBlockAccess {

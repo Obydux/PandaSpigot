@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Spottedleaf <Spottedleaf@users.noreply.github.com>
+Date: Sun, 20 Nov 2022 16:30:06 -0300
+Subject: [PATCH] Skip updating entity tracker without players
+
+
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index d7b2b64affff6079eaed67b3e4229afb975289ae..a4200844746c691024fa2662ebb404d93f7b104a 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -992,6 +992,7 @@ public abstract class MinecraftServer extends com.hpfxd.pandaspigot.tickloop.Ree
+                 }
+                 try {
+                 // PandaSpigot end
++                if (this.getPlayerList().getPlayerCount() != 0) // PandaSpigot - Skip updating entity tracker without players
+                 worldserver.getTracker().updatePlayers();
+                 // PandaSpigot start - controlled flush for entity tracker packets
+                 } finally {
