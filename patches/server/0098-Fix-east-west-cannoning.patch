@@ -4,19 +4,8 @@ Date: Fri, 9 Jun 2023 19:24:18 -0300
 Subject: [PATCH] Fix east/west cannoning
 
 
-diff --git a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
-index 360ed37b95fce68941c234615b465090b8ea7308..701e68b6e78b87ed3f2e823caf240872a3bc94f5 100644
---- a/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
-+++ b/src/main/java/com/hpfxd/pandaspigot/config/PandaSpigotWorldConfig.java
-@@ -62,4 +62,6 @@ public class PandaSpigotWorldConfig {
-     @Comment("This option controls whether or not there is a chance for arrow crits to deal extra damage.\n" +
-             "By default, this is true (vanilla behaviour)")
-     public boolean randomArrowDamage = true;
-+
-+    public boolean fixEastWestCannoning = false;
- }
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..eb6c13468f3ba863b30731643b0dfdc44f24c8fd 100644
+index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..bd1daed4a44389e405da6383d5f6b76707ffd617 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -551,11 +551,30 @@ public abstract class Entity implements ICommandListener {
@@ -29,7 +18,7 @@ index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..eb6c13468f3ba863b30731643b0dfdc4
              Iterator iterator1;
  
 +            // PandaSpigot start - Fix east/west cannoning by calculating the z movement before x if the x velocity is greater
-+            if (com.hpfxd.pandaspigot.config.PandaSpigotConfig.get().fixEastWestCannoning && Math.abs(d0) > Math.abs(d2)) {
++            if (this.world.paperSpigotConfig.fixCannons && Math.abs(d0) > Math.abs(d2)) {
 +                if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(0, 0, d2));
 +
 +                for (iterator1 = list.iterator(); iterator1.hasNext(); d2 = axisalignedbb2.c(this.getBoundingBox(), d2)) {
