@@ -1,0 +1,52 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: AmbrosL <AmbrosL@users.noreply.github.com>
+Date: Fri, 9 Jun 2023 19:24:18 -0300
+Subject: [PATCH] Fix east/west cannoning
+
+
+diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
+index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..fde246e53ec9e7d4d062c8e4ecada836758262b7 100644
+--- a/src/main/java/net/minecraft/server/Entity.java
++++ b/src/main/java/net/minecraft/server/Entity.java
+@@ -551,11 +551,30 @@ public abstract class Entity implements ICommandListener {
+             this.a(this.getBoundingBox().c(0.0D, d1, 0.0D));
+             boolean flag1 = this.onGround || d7 != d1 && d7 < 0.0D;
+ 
+-            if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(d0, 0, 0)); // PandaSpigot - get x axis blocks
+-
+             AxisAlignedBB axisalignedbb2;
+             Iterator iterator1;
+ 
++            // PandaSpigot start - Fix east/west cannoning by calculating the z movement before x if the x velocity is greater
++            if (Math.abs(d0) > Math.abs(d2)) {
++                if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(0, 0, d2));
++
++                for (iterator1 = list.iterator(); iterator1.hasNext(); d2 = axisalignedbb2.c(this.getBoundingBox(), d2)) {
++                    axisalignedbb2 = (AxisAlignedBB) iterator1.next();
++                }
++
++                this.a(this.getBoundingBox().c(0.0D, 0.0D, d2));
++
++                if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(d0, 0, 0));
++
++                for (iterator1 = list.iterator(); iterator1.hasNext(); d0 = axisalignedbb2.a(this.getBoundingBox(), d0)) {
++                    axisalignedbb2 = (AxisAlignedBB) iterator1.next();
++                }
++
++                this.a(this.getBoundingBox().c(d0, 0, 0));
++            } else {
++            if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(d0, 0, 0));
++            // PandaSpigot end
++
+             for (iterator1 = list.iterator(); iterator1.hasNext(); d0 = axisalignedbb2.a(this.getBoundingBox(), d0)) {
+                 axisalignedbb2 = (AxisAlignedBB) iterator1.next();
+             }
+@@ -569,6 +588,8 @@ public abstract class Entity implements ICommandListener {
+             }
+ 
+             this.a(this.getBoundingBox().c(0.0D, 0.0D, d2));
++            } // PandaSpigot
++
+             if (this.S > 0.0F && flag1 && (d6 != d0 || d8 != d2)) {
+                 double d10 = d0;
+                 double d11 = d1;
