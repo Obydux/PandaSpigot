@@ -5,7 +5,7 @@ Subject: [PATCH] Fix east/west cannoning
 
 
 diff --git a/src/main/java/net/minecraft/server/Entity.java b/src/main/java/net/minecraft/server/Entity.java
-index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..fde246e53ec9e7d4d062c8e4ecada836758262b7 100644
+index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..0968003894549e734a3433526ffc128c8ef79967 100644
 --- a/src/main/java/net/minecraft/server/Entity.java
 +++ b/src/main/java/net/minecraft/server/Entity.java
 @@ -551,11 +551,30 @@ public abstract class Entity implements ICommandListener {
@@ -33,9 +33,9 @@ index 37aae0ccb40e1827f268a88b1a74d288e3f5760d..fde246e53ec9e7d4d062c8e4ecada836
 +                    axisalignedbb2 = (AxisAlignedBB) iterator1.next();
 +                }
 +
-+                this.a(this.getBoundingBox().c(d0, 0, 0));
++                this.a(this.getBoundingBox().c(d0, 0.0D, 0.0D));
 +            } else {
-+            if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(d0, 0, 0));
++                if (axisScan) list = this.world.getCubes(this, this.getBoundingBox().a(d0, 0, 0));
 +            // PandaSpigot end
 +
              for (iterator1 = list.iterator(); iterator1.hasNext(); d0 = axisalignedbb2.a(this.getBoundingBox(), d0)) {
