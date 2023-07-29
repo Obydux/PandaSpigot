@@ -1,8 +1,9 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: uRyanxD <familiarodrigues123ro@gmail.com>
+From: Aikar <aikar@aikar.co>
 Date: Fri, 28 Jul 2023 20:57:18 -0300
-Subject: [PATCH] Restore Vanilla Minecart Precision
+Subject: [PATCH] Use Vanilla Minecart Speeds
 
+CraftBukkit changed the values on flying speed, restore back to vanilla
 
 diff --git a/src/main/java/net/minecraft/server/EntityMinecartAbstract.java b/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
 index 0446e2be5003e8aa785618de48767d160dd32b19..2d08693b41b9ad799414d1c7ba21a9ca5eaab42f 100644
