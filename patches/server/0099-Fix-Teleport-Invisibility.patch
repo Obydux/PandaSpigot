@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: uRyanxD <familiarodrigues123ro@gmail.com>
+Date: Fri, 28 Jul 2023 20:44:44 -0300
+Subject: [PATCH] Fix Teleport Invisibility
+
+TODO: Check EntityTrackerEntity
+
+diff --git a/src/main/java/net/minecraft/server/EntityTrackerEntry.java b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+index 0b90b6f30ea09fb117281d5ddd2fc752d2c139b5..25b91ddc51f17fbc9d276c95fe20e4fd41f217fb 100644
+--- a/src/main/java/net/minecraft/server/EntityTrackerEntry.java
++++ b/src/main/java/net/minecraft/server/EntityTrackerEntry.java
+@@ -155,7 +155,7 @@ public class EntityTrackerEntry {
+                         this.v = 0;
+                         // CraftBukkit start - Refresh list of who can see a player before sending teleport packet
+                         if (this.tracker instanceof EntityPlayer) {
+-                            this.scanPlayers(new java.util.ArrayList(this.trackedPlayers));
++                            this.scanPlayers(new java.util.ArrayList(this.tracker.world.players)); // PandaSpigot - Fix Teleport Invisibility
+                         }
+                         // CraftBukkit end
+                         object = new PacketPlayOutEntityTeleport(this.tracker.getId(), i, j, k, (byte) l, (byte) i1, this.tracker.onGround);

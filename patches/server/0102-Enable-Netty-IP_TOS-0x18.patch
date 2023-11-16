@@ -1,0 +1,18 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: uRyanxD <familiarodrigues123ro@gmail.com>
+Date: Fri, 28 Jul 2023 21:29:59 -0300
+Subject: [PATCH] Enable Netty IP_TOS 0x18
+
+
+diff --git a/src/main/java/net/minecraft/server/ServerConnection.java b/src/main/java/net/minecraft/server/ServerConnection.java
+index ae94817c51f57bef9f1b0b8687b645883f6ec985..57eb00c93e8b9c6df58e2a18f1c775c9f74fea7f 100644
+--- a/src/main/java/net/minecraft/server/ServerConnection.java
++++ b/src/main/java/net/minecraft/server/ServerConnection.java
+@@ -110,6 +110,7 @@ public class ServerConnection {
+                 protected void initChannel(Channel channel) throws Exception {
+                     try {
+                         channel.config().setOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(true));
++                        channel.config().setOption(ChannelOption.IP_TOS, 0x18); // PandaSpigot - Enable Netty IP_TOS 0x18
+                     } catch (ChannelException channelexception) {
+                         ;
+                     }

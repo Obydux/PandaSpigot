@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Aikar <aikar@aikar.co>
+Date: Fri, 28 Jul 2023 20:57:18 -0300
+Subject: [PATCH] Use Vanilla Minecart Speeds
+
+CraftBukkit changed the values on flying speed, restore back to vanilla
+
+diff --git a/src/main/java/net/minecraft/server/EntityMinecartAbstract.java b/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
+index 0446e2be5003e8aa785618de48767d160dd32b19..2d08693b41b9ad799414d1c7ba21a9ca5eaab42f 100644
+--- a/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
++++ b/src/main/java/net/minecraft/server/EntityMinecartAbstract.java
+@@ -30,9 +30,9 @@ public abstract class EntityMinecartAbstract extends Entity implements INamableT
+     private double derailedX = 0.5;
+     private double derailedY = 0.5;
+     private double derailedZ = 0.5;
+-    private double flyingX = 0.95;
+-    private double flyingY = 0.95;
+-    private double flyingZ = 0.95;
++    private double flyingX = 0.949999988079071D; // PandaSpigot - Restore Vanilla Minecart Precision
++    private double flyingY = 0.949999988079071D; // PandaSpigot - Restore Vanilla Minecart Precision
++    private double flyingZ = 0.949999988079071D; // PandaSpigot - Restore Vanilla Minecart Precision
+     public double maxSpeed = 0.4D;
+     // CraftBukkit end
+ 
